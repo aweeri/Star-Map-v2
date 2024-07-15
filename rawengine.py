@@ -1,5 +1,5 @@
 from ursina import *
-from ursina.prefabs.first_person_controller import FirstPersonController
+
 
 app = Ursina()
 
@@ -13,6 +13,17 @@ editor_camera.orthographic = False
 editor_camera.world_parent = scene
 
 cube = Entity(model='cube', collider='box', scale=2, position=(0, 0, 0), rotation=(0, 0, 0), color=color.azure)
+
+
+with open('data/athyg_full.csv', 'r') as file:
+    lines = file.readlines()
+
+for line in lines:
+    line = line.split(',')
+    print(line[16:19])
+
+
+    
 
 def update():
     pass
