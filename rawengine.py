@@ -1,4 +1,6 @@
 from ursina import *
+import threading
+import csv
 
 def get_sector_axis(x, total_sectors, min_value, max_value):
   
@@ -23,21 +25,42 @@ app = Ursina()
 
 editor_camera = EditorCamera()
 editor_camera.position = (0, 10, 0)
-editor_camera.move_speed = 1
+editor_camera.move_speed = 5
 
 stars = []
 pointer = Entity(model=Circle(16), color=color.cyan , scale=0.03, position=(0, 0, 0), billboard=True)
 pointer.parent = editor_camera
 
 
+def my_function(rX,rY,rZ):
+                with open(f'Chunks/Region_{rX}_{rY}_{rZ}.csv', 'r') as file:
+                            lines = file.readlines()
+                            for line in lines:
+                                line = line.strip().split(',')
+                                try:
+                                    stars.append(Entity(model=Circle(5), billboard=True, scale=0.01, position=(float(line[16])/100, float(line[17])/100, float(line[18])/100)))
+                                    #print((float(line[16])/100, float(line[17])/100, float(line[18])/100))
+                                except:
+                                    pass
 
+
+chunkwidth = 0
+
+with open('Chunks/seginfo.dat', 'r') as segfile:
+    chunkwidth = int(segfile.read())
+    print(f"chunkwidth is {chunkwidth}")
 
 currentregion = (1, 1, 1)
 previousregion = (1, 1, 1)
 def update():
+
+    if held_keys["escape"]:
+        quit()
+
     global previousregion, currentregion
+    
     previousregion = currentregion
-    currentregion = get_combined_sector(editor_camera.position.x*100, editor_camera.position.y*100, editor_camera.position.z*100, 1000, -81000, 33000)
+    currentregion = get_combined_sector(editor_camera.position.x*100, editor_camera.position.y*100, editor_camera.position.z*100, chunkwidth, -81000, 33000)
     if currentregion != previousregion:
         print(f"Loading new sector:{currentregion[0]}/{currentregion[1]}/{currentregion[2]}")
         try:
@@ -45,15 +68,9 @@ def update():
                 destroy(star)
             stars.clear()
 
-            with open(f'Chunks/Region_{currentregion[0]}_{currentregion[1]}_{currentregion[2]}.csv', 'r') as file:
-                lines = file.readlines()
-                for line in lines:
-                    line = line.strip().split(',')
-                    try:
-                        stars.append(Entity(model=Circle(5), billboard=True, scale=0.01, position=(float(line[16])/100, float(line[17])/100, float(line[18])/100)))
-                        #print((float(line[16])/100, float(line[17])/100, float(line[18])/100))
-                    except:
-                        pass
+            #split_and_process(currentregion[0],currentregion[1],currentregion[2], 2)
+            loadingThread = threading.Thread(target=my_function, args=(currentregion[0],currentregion[1],currentregion[2]))
+            loadingThread.start()
         except:
            pass
 

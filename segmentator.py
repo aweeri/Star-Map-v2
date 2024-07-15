@@ -9,7 +9,7 @@ for file in os.listdir('Chunks'):
 print(f"Purged {filecount} files")
 
 
-chunkcount = 1000
+chunkcount = 5000
 
 
 bounds = {
@@ -23,6 +23,8 @@ bounds = {
     'maxz': 28759.517
 }
 
+with open('Chunks/seginfo.dat', 'w') as segfile:
+    segfile.write(f'{chunkcount}')
 
 
 def get_sector_axis(x, total_sectors, min_value, max_value):
@@ -43,6 +45,7 @@ def get_combined_sector(x, y, z, total_sectors_per_axis, min_value, max_value):
   sector_y = get_sector_axis(y, total_sectors_per_axis, min_value, max_value)
   sector_z = get_sector_axis(z, total_sectors_per_axis, min_value, max_value)
   return (sector_x, sector_y, sector_z)
+
 
 
 with open('data/athyg_full.csv', 'r') as file:
