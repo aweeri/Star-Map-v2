@@ -17,10 +17,17 @@ cube = Entity(model='cube', collider='box', scale=2, position=(0, 0, 0), rotatio
 
 with open('data/athyg_full.csv', 'r') as file:
     lines = file.readlines()
-
+lista = []
 for line in lines:
     line = line.split(',')
-    print(line[16:19])
+    
+    try:
+        line[16:19] = [float(num) for num in line[16:19]]
+        lista.append(line[16:19])
+    except:
+        pass
+print(lista[0:5])
+
 
 
     
