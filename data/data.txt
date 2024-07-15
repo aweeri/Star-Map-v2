@@ -1,0 +1,70 @@
+id    tyc    gaia    hyg    hip    hd    hr    gl    bayer    flam    con    
+0     1      2       3      4      5     6     7     8        9       10
+
+proper    ra    dec    pos_src    dist    x0    y0    z0    dist_src    mag 
+11        12    13     14         15      16    17    18    19          20
+
+absmag    ci    mag_src    rv    rv_src    pm_ra    pm_dec    pm_src    vx    vy    vz    spect    spect_src
+21        22    23         24    25        26       27        28        29    30    31    32       33
+
+
+
+id: A unique numeric identifier for each star.
+
+tyc: The stars identifier in the Tycho catalog.
+
+gaia: The stars identifier in the Gaia catalog.
+
+hyg: The stars identifier in the HYG database.
+
+hip: The stars identifier in the Hipparcos catalog.
+
+hd: The stars identifier in the Henry Draper catalog.
+
+hr: The stars identifier in the Bright Star Catalog, also known as the Harvard Revised catalog.
+
+gl: The stars identifier in the Gliese catalog of nearby stars.
+
+bayer: The Bayer designation as a traditional name for the star.
+
+flam: The Flamsteed designation of the star.
+
+con: The constellation where the star is located.
+
+proper: The proper name of the star.
+
+ra: Right ascension of the star.
+
+dec: Declination of the star.
+
+pos_src: The source of the position data.
+
+dist: The distance of the star from Earth.
+
+x0, y0, z0: Cartesian coordinates of the star, with the Sun at the origin.
+
+dist_src: The source of the distance data.
+
+mag: The apparent magnitude of the star.
+
+absmag: The absolute magnitude of the star.
+
+ci: Color index of the star.
+
+mag_src: The source of the magnitude data.
+
+rv: Radial velocity of the star.
+
+rv_src: The source of the radial velocity data.
+
+pm_ra: Proper motion in right ascension.
+
+pm_dec: Proper motion in declination.
+
+pm_src: The source of the proper motion data.
+
+vx, vy, vz: Space velocity components of the star.
+
+spect: Spectral type of the star.
+
+spect_src: The source of the spectral type data.
