@@ -27,21 +27,31 @@ editor_camera = EditorCamera()
 editor_camera.position = (0, 10, 0)
 editor_camera.move_speed = 5
 
+grid = Entity(model=Grid(128,128), scale=48, position=(0, 0, 0),rotation=(90, 0, 0), color=color.gray)
+
 stars = []
 pointer = Entity(model=Circle(16), color=color.cyan , scale=0.03, position=(0, 0, 0), billboard=True)
 pointer.parent = editor_camera
 
-
+threadStop = False
 def my_function(rX,rY,rZ):
-                with open(f'Chunks/Region_{rX}_{rY}_{rZ}.csv', 'r') as file:
-                            lines = file.readlines()
-                            for line in lines:
-                                line = line.strip().split(',')
-                                try:
-                                    stars.append(Entity(model=Circle(5), billboard=True, scale=0.01, position=(float(line[16])/100, float(line[17])/100, float(line[18])/100)))
-                                    #print((float(line[16])/100, float(line[17])/100, float(line[18])/100))
-                                except:
-                                    pass
+    global threadStop
+    with open(f'Chunks/Region_{rX}_{rY}_{rZ}.csv', 'r') as file:
+                lines = file.readlines()
+                for line in lines:
+                    if threadStop:
+                        for star in stars:
+                            destroy(star)
+                        stars.clear()
+                        threadStop = False
+                        return 0
+                    
+                    line = line.strip().split(',')
+                    try:
+                        stars.append(Entity(model=Circle(5), billboard=True, scale=0.01, position=(float(line[16])/100, float(line[17])/100, float(line[18])/100)))
+                        #print((float(line[16])/100, float(line[17])/100, float(line[18])/100))
+                    except:
+                        pass
 
 
 chunkwidth = 0
@@ -57,11 +67,12 @@ def update():
     if held_keys["escape"]:
         quit()
 
-    global previousregion, currentregion
+    global previousregion, currentregion, threadStop
     
     previousregion = currentregion
     currentregion = get_combined_sector(editor_camera.position.x*100, editor_camera.position.y*100, editor_camera.position.z*100, chunkwidth, -81000, 33000)
     if currentregion != previousregion:
+        
         print(f"Loading new sector:{currentregion[0]}/{currentregion[1]}/{currentregion[2]}")
         try:
             for star in stars:
@@ -71,9 +82,9 @@ def update():
             #split_and_process(currentregion[0],currentregion[1],currentregion[2], 2)
             loadingThread = threading.Thread(target=my_function, args=(currentregion[0],currentregion[1],currentregion[2]))
             loadingThread.start()
+            
         except:
            pass
-
     #print(currentregion)
 
 

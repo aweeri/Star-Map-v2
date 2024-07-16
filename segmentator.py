@@ -9,7 +9,7 @@ for file in os.listdir('Chunks'):
 print(f"Purged {filecount} files")
 
 
-chunkcount = 5000
+chunkcount = 2000
 
 
 bounds = {
