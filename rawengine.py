@@ -1,6 +1,7 @@
 from ursina import *
 import threading
 import csv
+import time
 
 def get_sector_axis(x, total_sectors, min_value, max_value):
   
@@ -33,25 +34,42 @@ stars = []
 pointer = Entity(model=Circle(16), color=color.cyan , scale=0.03, position=(0, 0, 0), billboard=True)
 pointer.parent = editor_camera
 
+def renderChunk(lines):
+    for line in lines:
+        line = line.strip().split(',')
+        try:
+            floats = [float(line[i]) / 100 for i in range(16, 19)]
+            stars.append(Entity(model=Circle(5), billboard=True, scale=0.01, position=floats))
+        except:
+            pass
+
 threadStop = False
-def my_function(rX,rY,rZ):
+
+def readChunk(rX,rY,rZ):
     global threadStop
     with open(f'Chunks/Region_{rX}_{rY}_{rZ}.csv', 'r') as file:
                 lines = file.readlines()
-                for line in lines:
-                    if threadStop:
-                        for star in stars:
-                            destroy(star)
-                        stars.clear()
-                        threadStop = False
-                        return 0
-                    
-                    line = line.strip().split(',')
-                    try:
-                        stars.append(Entity(model=Circle(5), billboard=True, scale=0.01, position=(float(line[16])/100, float(line[17])/100, float(line[18])/100)))
-                        #print((float(line[16])/100, float(line[17])/100, float(line[18])/100))
-                    except:
-                        pass
+                length = len(lines)
+                print(length)
+                
+                
+
+                if len(lines) > 200:
+                    half = len(lines) // 2
+                    first_half = lines[:half]
+                    second_half = lines[half:]
+
+                    renderThread1 = threading.Thread(target=renderChunk, args=([first_half]))
+                    renderThread2 = threading.Thread(target=renderChunk, args=([second_half]))
+                    renderThread1.start()
+                    renderThread2.start()
+                
+                
+                
+                else:
+                    renderChunk(lines)
+
+
 
 
 chunkwidth = 0
@@ -80,7 +98,7 @@ def update():
             stars.clear()
 
             #split_and_process(currentregion[0],currentregion[1],currentregion[2], 2)
-            loadingThread = threading.Thread(target=my_function, args=(currentregion[0],currentregion[1],currentregion[2]))
+            loadingThread = threading.Thread(target=readChunk, args=(currentregion[0],currentregion[1],currentregion[2]))
             loadingThread.start()
             
         except:

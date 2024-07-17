@@ -46,7 +46,16 @@ def get_combined_sector(x, y, z, total_sectors_per_axis, min_value, max_value):
   sector_z = get_sector_axis(z, total_sectors_per_axis, min_value, max_value)
   return (sector_x, sector_y, sector_z)
 
+"""
+id: A unique numeric identifier for each star.
 
+x0, y0, z0: Cartesian coordinates of the star, with the Sun at the origin.
+
+absmag: The absolute magnitude of the star.
+
+ci: Color index of the star.
+
+"""
 
 with open('data/athyg_full.csv', 'r') as file:
     lines = file.readlines()
@@ -55,12 +64,12 @@ with open('data/athyg_full.csv', 'r') as file:
         try:
             print(f"{round((float(line[0])/2500000)*100, 2)}%")
         except:
-           pass
+            pass
         try:
             region = get_combined_sector(float(line[16]), float(line[17]), float(line[18]), chunkcount, -81000, 33000)
             file = open(f'Chunks/Region_{region[0]}_{region[1]}_{region[2]}.csv', 'a', newline='')
             writer = csv.writer(file)
-            writer.writerow(line)
+            writer.writerow(",".join([str(x) for x in line[0:6] + line[10:12]]))
         except:
             pass
 

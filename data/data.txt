@@ -70,3 +70,16 @@ vx, vy, vz: Space velocity components of the star.
 spect: Spectral type of the star.
 
 spect_src: The source of the spectral type data.
+
+
+###############################################################
+
+
+id: A unique numeric identifier for each star.
+
+x0, y0, z0: Cartesian coordinates of the star, with the Sun at the origin.
+
+absmag: The absolute magnitude of the star.
+
+ci: Color index of the star.
+
