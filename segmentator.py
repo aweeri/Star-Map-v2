@@ -56,20 +56,24 @@ absmag: The absolute magnitude of the star.
 ci: Color index of the star.
 
 """
-
+c = 0
 with open('data/athyg_full.csv', 'r') as file:
     lines = file.readlines()
     for line in lines:
+        c += 1
         line = line.strip().split(',')
         try:
-            print(f"{round((float(line[0])/2500000)*100, 2)}%")
+            if c % 10000 == 0:
+                print(f"{round((float(line[0])/2500000)*100, 2)}%")
         except:
             pass
         try:
+            #print(",".join([str(x) for x in line[0:6] + line[10:12]]))
             region = get_combined_sector(float(line[16]), float(line[17]), float(line[18]), chunkcount, -81000, 33000)
-            file = open(f'Chunks/Region_{region[0]}_{region[1]}_{region[2]}.csv', 'a', newline='')
-            writer = csv.writer(file)
-            writer.writerow(",".join([str(x) for x in line[0:6] + line[10:12]]))
+            genfile = open(f'Chunks/Region_{region[0]}_{region[1]}_{region[2]}.csv', 'a', newline='')
+            writer = csv.writer(genfile)
+            writer.writerow([line[0], line[16], line[17], line[18], line[21], line[22]])
+            genfile.close()
         except:
             pass
 
